@@ -1,0 +1,13 @@
+name = "model-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-02-08"
+
+[vars]
+# 配置模型的基础 URL (API key 在请求时通过 Authorization header 传入)
+# ANTHROPIC_BASE_URL = "https://api.anthropic.com"
+# OPENAI_BASE_URL = "https://api.openai.com"
+# GEMINI_BASE_URL = "https://generativelanguage.googleapis.com"
+
+[[routes]]
+pattern = "https://your-domain.com/*"
+zone_name = "your-domain.com"

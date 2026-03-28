@@ -1,0 +1,19 @@
+{
+  "name": "model-proxy",
+  "version": "1.0.0",
+  "description": "Cloudflare Workers proxy for LLM APIs supporting Anthropic and OpenAI protocols",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler preview"
+  },
+  "keywords": ["cloudflare", "workers", "llm", "proxy", "anthropic", "openai"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240208.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.28.1"
+  }
+}
