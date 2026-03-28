@@ -7,7 +7,3 @@ compatibility_date = "2024-02-08"
 # ANTHROPIC_BASE_URL = "https://api.anthropic.com"
 # OPENAI_BASE_URL = "https://api.openai.com"
 # GEMINI_BASE_URL = "https://generativelanguage.googleapis.com"
-
-[[routes]]
-pattern = "https://your-domain.com/*"
-zone_name = "your-domain.com"
