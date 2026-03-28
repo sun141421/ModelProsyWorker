@@ -1,12 +1,28 @@
 const http = require('http');
+const https = require('https');
 
-const BASE_URL = 'localhost';
-const PORT = 8787;
+// 配置: 设置 useLocal 为 true 测试本地服务器，false 测试 Cloudflare 部署
+const config = {
+  useLocal: false,  // 切换这里
+  local: {
+    protocol: 'http',
+    hostname: 'localhost',
+    port: 8787
+  },
+  remote: {
+    protocol: 'https',
+    hostname: 'XXXXXX.workers.dev',
+    port: 443
+  }
+};
+
+const { protocol, hostname, port } = config.useLocal ? config.local : config.remote;
+const httpModule = protocol === 'https' ? https : http;
 
 // 模拟 curl 请求的工具函数
 function makeRequest(options, data = null) {
   return new Promise((resolve, reject) => {
-    const req = http.request(options, (res) => {
+    const req = httpModule.request(options, (res) => {
       let body = '';
       res.on('data', (chunk) => {
         body += chunk;
@@ -44,8 +60,8 @@ function makeRequest(options, data = null) {
 async function testHealthCheck(model = 'gpt-4') {
   console.log('\n=== 测试 1: 健康检查 ===');
   const options = {
-    hostname: BASE_URL,
-    port: PORT,
+    hostname: hostname,
+    port: port,
     path: `/${model}/`,
     method: 'GET',
     headers: {
@@ -68,8 +84,8 @@ async function testHealthCheck(model = 'gpt-4') {
 async function testCORS() {
   console.log('\n=== 测试 2: CORS 预检请求 ===');
   const options = {
-    hostname: BASE_URL,
-    port: PORT,
+    hostname: hostname,
+    port: port,
     path: '/gpt-4/v1/chat/completions',
     method: 'OPTIONS',
     headers: {
@@ -105,8 +121,8 @@ async function testOpenAIProtocol(model, apiKey = 'test-key') {
   };
 
   const options = {
-    hostname: BASE_URL,
-    port: PORT,
+    hostname: hostname,
+    port: port,
     path: `/${model}/v1/chat/completions`,
     method: 'POST',
     headers: {
@@ -121,7 +137,8 @@ async function testOpenAIProtocol(model, apiKey = 'test-key') {
     if (response.body) {
       console.log('响应:', JSON.stringify(response.body, null, 2));
     }
-    return response.statusCode === 200 || response.statusCode === 401; // 401 也是有效的响应（API key 无效是预期的）
+    // 401 (无效 API key) 或 400 (无效 API key) 都是有效的响应
+    return response.statusCode === 200 || response.statusCode === 401 || response.statusCode === 400;
   } catch (err) {
     console.error('错误:', err.message);
     return false;
@@ -140,8 +157,8 @@ async function testAnthropicProtocol(model, apiKey = 'test-key') {
   };
 
   const options = {
-    hostname: BASE_URL,
-    port: PORT,
+    hostname: hostname,
+    port: port,
     path: `/${model}/v1/messages`,
     method: 'POST',
     headers: {
@@ -168,8 +185,8 @@ async function testAnthropicProtocol(model, apiKey = 'test-key') {
 async function testInvalidPath() {
   console.log('\n=== 测试 5: 无效路径 ===');
   const options = {
-    hostname: BASE_URL,
-    port: PORT,
+    hostname: hostname,
+    port: port,
     path: '/invalid/path/test',
     method: 'GET',
     headers: {
@@ -199,8 +216,8 @@ async function testMissingAuth(model) {
   };
 
   const options = {
-    hostname: BASE_URL,
-    port: PORT,
+    hostname: hostname,
+    port: port,
     path: `/${model}/v1/chat/completions`,
     method: 'POST',
     headers: {
@@ -224,8 +241,11 @@ async function runAllTests() {
   console.log('==================================');
   console.log('  Model Proxy 测试套件');
   console.log('==================================');
-  console.log(`目标服务器: ${BASE_URL}:${PORT}`);
-  console.log('请确保先运行: npm run dev');
+  console.log(`目标服务器: ${protocol}://${hostname}:${port}`);
+  console.log(`模式: ${config.useLocal ? '本地开发' : 'Cloudflare 部署'}`);
+  if (config.useLocal) {
+    console.log('请确保先运行: npm run dev');
+  }
 
   const results = [];
 
