@@ -233,7 +233,7 @@ async function runAllTests() {
   results.push({ name: 'CORS 预检', passed: await testCORS() });
   results.push({ name: 'OpenAI 协议 (GPT)', passed: await testOpenAIProtocol('gpt-4') });
   results.push({ name: 'OpenAI 协议 (Claude)', passed: await testOpenAIProtocol('claude-3-opus-20240229') });
-  results.push({ name: 'OpenAI 协议 (Gemini)', passed: await testOpenAIProtocol('gemini-1.5-pro') });
+  results.push({ name: 'OpenAI 协议 (Gemini)', passed: await testOpenAIProtocol('gemini-2.5-flash') });
   results.push({ name: 'Anthropic 协议', passed: await testAnthropicProtocol('claude-3-opus-20240229') });
   results.push({ name: '无效路径', passed: await testInvalidPath() });
   results.push({ name: '缺少 Auth Header', passed: await testMissingAuth('gpt-4') });
