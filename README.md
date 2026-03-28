@@ -140,6 +140,32 @@ MODEL_MY_CUSTOM_MODEL_API_KEY = "your-api-key"
 curl https://your-worker.workers.dev/my-custom-model/v1/chat/completions ...
 ```
 
+## 测试
+
+### 手动测试
+
+查看 [TESTING.md](TESTING.md) 获取详细的 curl 测试命令。
+
+### 自动化测试脚本
+
+项目包含 `Test.js`，一个 Node.js 测试脚本，可以模拟 curl 请求测试所有端点：
+
+```bash
+# 首先启动本地开发服务器
+npm run dev
+
+# 在另一个终端运行测试
+node Test.js
+```
+
+测试脚本包含以下测试：
+- 健康检查
+- CORS 预检请求
+- OpenAI 协议 (GPT、Claude、Gemini)
+- Anthropic 协议
+- 无效路径
+- 缺少 Authorization header
+
 ## 项目结构
 
 ```
@@ -154,5 +180,7 @@ curl https://your-worker.workers.dev/my-custom-model/v1/chat/completions ...
 │       └── gemini.ts         # Gemini 协议适配器
 ├── wrangler.toml             # Cloudflare Workers 配置
 ├── package.json
-└── tsconfig.json
+├── tsconfig.json
+├── TESTING.md                # 测试指南
+└── Test.js                   # Node.js 测试脚本
 ```
